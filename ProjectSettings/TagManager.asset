@@ -48,12 +48,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
+  - name: POIBelow
+    uniqueID: 3043214055
+    locked: 0
+  - name: Entities
     uniqueID: 2777728281
+    locked: 0
+  - name: POIAbove
+    uniqueID: 3709713235
     locked: 0
   - name: UI
     uniqueID: 2737287149
-    locked: 0
-  - name: LandBelow
-    uniqueID: 3548581467
     locked: 0

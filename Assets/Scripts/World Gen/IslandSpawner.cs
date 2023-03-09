@@ -9,34 +9,46 @@ public class IslandSpawner : MonoBehaviour
     public List<GameObject> singleSpawnPool;
     public GameObject quad;
     public GameObject shop;
-    public GameObject enemy;
-    public int enemiesInWorldCount = 50;
-    public int lowerEnemyGroupSize = 2;
-    public int upperEnemyGroupSize = 6;
-
 
     void Start()
     {
-        spawnSingleIslands();
+        //spawnSingleIslands();
         spawnShops();
     }
 
+    // Disabled for now
+    // Need to test this when big/varying sized isalnds are added for the .radius * 1.5. May be an issue
     public void spawnSingleIslands()
     {
-        destroyIslands();
-
         MeshCollider c = quad.GetComponent<MeshCollider>();
 
         float screenX, screenY;
         Vector2 pos;
 
-        for (int i = 0; i < singleSpawnPool.Count; i++)
+        int i = 0;
+        int attempt = 0;
+        while (i < singleSpawnPool.Count)
         {
             screenX = Random.Range(c.bounds.min.x, c.bounds.max.x);
             screenY = Random.Range(c.bounds.min.y, c.bounds.max.y);
             pos = new Vector2(screenX, screenY);
 
-            Instantiate(singleSpawnPool[i], pos, singleSpawnPool[i].transform.rotation);
+            // All islands drawn in rough circular shapes, so can use this
+            float colRadius = singleSpawnPool[i].GetComponent<CircleCollider2D>().radius * 1.5f;
+            //Debug.Log("New pos: " + newPos);           
+
+            // If 0, no collisions
+            int size = Physics2D.OverlapCircleAll(pos, colRadius).Length;
+            
+            if(Physics2D.OverlapCircleAll(pos, colRadius).Length == 0) {
+                Instantiate(singleSpawnPool[i], pos, singleSpawnPool[i].transform.rotation);
+                i++;
+            }
+            attempt++;
+                if(attempt > 10){
+                    Debug.Log("Enemy spawn retry limit hit!!");
+                    break;
+            }
         }
     }
 
@@ -57,88 +69,5 @@ public class IslandSpawner : MonoBehaviour
         }
     }
 
-    public void spawnEnemies()
-    {
-        MeshCollider c = quad.GetComponent<MeshCollider>();
-
-        float screenX, screenY;
-        Vector2 pos;
-
-        int totalEnemiesInWorld = 0;
-        while (totalEnemiesInWorld < enemiesInWorldCount)
-        {
-            int groupSize = Random.Range(lowerEnemyGroupSize, upperEnemyGroupSize);
-
-            screenX = Random.Range(c.bounds.min.x, c.bounds.max.x);
-            screenY = Random.Range(c.bounds.min.y, c.bounds.max.y);
-            pos = new Vector2(screenX, screenY);
-            
-            // Creates first enemy
-            Instantiate(enemy, pos, enemy.transform.rotation);
-
-            for (int i = 0; i < groupSize; i++)
-            {
-                
-                PreventSpawnOverlap(pos, )
-
-                Instantiate(enemy, pos, enemy.transform.rotation);
-                pos = newPos;
-            }
-
-        }
-
-
-    }
-
-    // This determines how close enemies will spawn to each other
-    private Vector2 GetRandomSpawnPos(Vector2 startPos)
-    {
-        return startPos + GetRandomDir() * Random.Range(4f, 8f);
-    }
-
-    // Generate random normalized direction
-    private static Vector2 GetRandomDir()
-    {
-        return new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized;
-    }
-
-    public bool PreventSpawnOverlap(Vector2 pos, int radius) {
-        // If 0, no collisions
-        if(Physics2D.OverlapCircleAll(pos, radius).Length == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    // public void spawnIslands()
-    // {
-    //     destroyIslands();
-
-    //     int randNum = 0;
-    //     GameObject toSpawn;
-    //     MeshCollider c = quad.GetComponent<MeshCollider>();
-
-    //     float screenX, screenY;
-    //     Vector2 pos;
-
-    //     for (int i = 0; i < numberToSpawn; i++)
-    //     {
-    //         randNum = Random.Range(0, multiSpawnPool.Count);
-    //         toSpawn = multiSpawnPool[randNum];
-
-    //         screenX = Random.Range(c.bounds.min.x, c.bounds.max.x);
-    //         screenY = Random.Range(c.bounds.min.y, c.bounds.max.y);
-    //         pos = new Vector2(screenX, screenY);
-
-    //         Instantiate(toSpawn, pos, toSpawn.transform.rotation);
-    //     }
-    // }
-
-    private void destroyIslands()
-    {
-        foreach (GameObject o in GameObject.FindGameObjectsWithTag("Spawnable"))
-        {
-            Destroy(o);
-        }
-    }
+    
 }

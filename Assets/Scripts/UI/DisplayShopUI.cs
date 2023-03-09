@@ -27,6 +27,7 @@ public class DisplayShopUI : MonoBehaviour
             Debug.Log("In player shop");
             //stops ship moving
             shipRb.velocity = Vector2.zero;
+            shipRb.angularVelocity = 0;
             ship.GetComponent<TopDownShipController>().setCanMove(false);
             //sets the position of ship to be middle of shop
             //shipController.setPos(Vector2.MoveTowards(shipController.getPos(), transform.position, speedToCentre * Time.deltaTime));

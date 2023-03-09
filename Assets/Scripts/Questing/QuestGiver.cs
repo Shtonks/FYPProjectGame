@@ -6,9 +6,10 @@ using TMPro;
 
 public class QuestGiver : MonoBehaviour
 {
-    AllQuests allQuests;
+    //AllQuests allQuests;
     public Quest quest;
     public PlayerBehaviour player;
+    public QuestMaker questMaker = new QuestMaker();
 
     public GameObject questWindow;
     public TMP_Text txtTitle;
@@ -17,23 +18,16 @@ public class QuestGiver : MonoBehaviour
     //public TMP_Text txtFactionReward;
 
     private void Start() {
-        allQuests = new AllQuests();
+        //allQuests = new AllQuests();
     }
 
     public void OpenQuestWindow() {
-        quest = QuestSelector();
+        quest = questMaker.GenQuest();
         questWindow.SetActive(true);
         txtTitle.text = quest.title.ToString();
         txtDesc.text = quest.desc.ToString();
         txtShardReward.text = quest.shardReward.ToString();
         //txtFactionReward.text = quest.factionReward.ToString();
-    }
-
-    public Quest QuestSelector() {
-        int randomNum = Random.Range(0, allQuests.listOfAllQuests.Count);
-        //return allQuests.listOfAllQuests[randomNum];
-        // Rigging for testing
-        return allQuests.listOfAllQuests[1];
     }
 
     public void AcceptQuest() {
