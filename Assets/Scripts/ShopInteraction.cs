@@ -1,25 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-
-public class QuestGiver : MonoBehaviour
+public class ShopInteraction : GenericShopInteraction
 {
-    //AllQuests allQuests;
     public Quest quest;
-    public PlayerBehaviour player;
     public QuestMaker questMaker = new QuestMaker();
+    public QuestTracker questTracker;
+    public Button contractSelect;
 
+    // Quest window elements
     public GameObject questWindow;
     public TMP_Text txtTitle;
     public TMP_Text txtDesc;
     public TMP_Text txtShardReward;
     //public TMP_Text txtFactionReward;
 
-    private void Start() {
-        //allQuests = new AllQuests();
-    }
 
     public void OpenQuestWindow() {
         quest = questMaker.GenQuest();
@@ -32,8 +30,17 @@ public class QuestGiver : MonoBehaviour
 
     public void AcceptQuest() {
         questWindow.SetActive(false);
-        quest.isActive = true;
-        player.quests.Add(quest);
+        // Means can only take on 1 quest for now. not ideal
+        contractSelect.interactable = false;
+        pb.quests.Add(quest);
+        questTracker.CreateQuestTracker(quest.title, quest.desc, 1);
     }
 
+    public void AbandonQuest() {
+        // Shards penalty of -50% what you wouls have got
+        pb.shards -= quest.shardReward / 2;
+        contractSelect.interactable = true;
+        pb.quests.Remove(quest);
+        questTracker.DeactivateTracker();
+    }
 }

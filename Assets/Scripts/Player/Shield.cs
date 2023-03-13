@@ -55,14 +55,14 @@ public class Shield : MonoBehaviour
     private void ToggleShield() {
         col.enabled = !col.enabled;
         sr.enabled = !sr.enabled;
-        Debug.Log("Togglging shield");
+        // Debug.Log("Togglging shield");
     }
 
     private void ShieldCountdown() {
         currentTime += Time.deltaTime;
 
         if(currentTime >= countdownInterval) {
-            Debug.Log("Countdown:" + countdown);
+            // Debug.Log("Countdown:" + countdown);
             shieldStatusBar[countdown].SetActive(false);
             countdown--;
             currentTime = 0f;
@@ -77,7 +77,7 @@ public class Shield : MonoBehaviour
         currentTime += Time.deltaTime;
 
         if(currentTime >= rechargeInterval) {
-            Debug.Log("Recharge:" + countdown);
+            // Debug.Log("Recharge:" + countdown);
             shieldStatusBar[countdown].SetActive(true);
             currentTime = 0f;
             countdown++;

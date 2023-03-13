@@ -1,26 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 
 public class QuestMaker
 {
-    private List<string> material = new List<string>() {
-        "Food",
-        "Wood",
-        "Iron",
-        "Marble",
-        "Obsidian",
-        "GlowOil"
-    };
+    private List<Item> material;
 
     public Quest GenQuest() {
-        // Decide material
-        string randMat = material[Random.Range(0, material.Count)];
+        Item randItem = RandomItem();
         
         // Decide faction (and inherently, delivery location)
         Faction randFact;
-        int randFactNum = Random.Range(0, 3);
+        int randFactNum = UnityEngine.Random.Range(0, 3);
         switch(randFactNum) {
             default:
             case 1:
@@ -34,16 +28,22 @@ public class QuestMaker
                 break;
         }
 
-        string factName = randFact.getName();
-
-        Debug.Log("Mat: " + randMat);
-        Debug.Log("Fact: " + randFact);
-
-        string questTitle = factName + " requires " + randMat;
         // Random reward. Reward size decision could be improved
-        int shardReward = Random.Range(50, 200);
+        int shardReward = UnityEngine.Random.Range(50, 200);
+        int factionReward = 3;
 
-        return (new Quest(questTitle, "Lorem Ipsum", shardReward, GoalType.Deliver, 1));
+        return (new Quest(randItem, randFact, "Lorem Ipsum", shardReward, factionReward, 1));
+    }
+
+    private Item RandomItem() {
+        System.Random random = new System.Random();
+
+        Type type = typeof(Item);
+        Array values = type.GetEnumValues();
+        int index = random.Next(values.Length);
+
+        return (Item)values.GetValue(index);
+        
     }
 
     // public AllQuests() {

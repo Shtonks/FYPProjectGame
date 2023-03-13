@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     public List<Quest> quests;
+    public List<Item> items;
+
     
     public int speed;
     public int fuelLvl;
@@ -26,12 +28,6 @@ public class PlayerBehaviour : MonoBehaviour
         // }        
     }
 
-    public void QuestComplete(Quest q) {
-        shards += q.shardReward;
-        Debug.Log(q.title + " completed!!");
-        q.isActive = false;
-    }
-
     public void TakeDmg(int dmg) {
         GameManager.gameManager.Health.dmgUnit(dmg);
         
@@ -44,4 +40,12 @@ public class PlayerBehaviour : MonoBehaviour
     public int GetHealth() {
         return GameManager.gameManager.Health.Health;
     }
+
+    public void QuestComplete(Quest quest) {
+        Debug.Log(quest.title + " completed!!");
+        shards += quest.shardReward;
+        quests.Remove(quest);
+    }
+
+
 }
