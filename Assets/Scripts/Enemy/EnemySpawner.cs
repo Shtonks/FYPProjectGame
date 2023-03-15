@@ -57,7 +57,7 @@ public class EnemySpawner : MonoBehaviour
                 attempt++;
                 if(attempt > 10){
                     Debug.Log("Enemy spawn retry limit hit!!");
-                    break;
+                    i++;
                 }
             }
             totalEnemiesInWorld += groupSize;

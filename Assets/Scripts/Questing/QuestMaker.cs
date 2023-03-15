@@ -7,32 +7,23 @@ using System;
 
 public class QuestMaker
 {
-    private List<Item> material;
-
     public Quest GenQuest() {
         Item randItem = RandomItem();
-        
-        // Decide faction (and inherently, delivery location)
-        Faction randFact;
-        int randFactNum = UnityEngine.Random.Range(0, 3);
-        switch(randFactNum) {
-            default:
-            case 1:
-                randFact = Jura.Instance;
-                break;
-            case 2:
-                randFact = Nardvaal.Instance;
-                break;
-            case 3:
-                randFact = Nardvaal.Instance;
-                break;
-        }
+        Faction randFact = RandomFaction();
 
+        string title = randFact.getName() + " requires " + randItem.ToString();
         // Random reward. Reward size decision could be improved
         int shardReward = UnityEngine.Random.Range(50, 200);
         int factionReward = 3;
 
-        return (new Quest(randItem, randFact, "Lorem Ipsum", shardReward, factionReward, 1));
+        Goal goal = new DeliveryGoal(randFact, randItem);
+
+        return (new Quest(title, "Lorem Ipsum", shardReward, factionReward, goal));
+
+        //TEST
+        // Goal testGoal = new DeliveryGoal(Welkan.Instance, Item.Wood);
+        // return (new Quest("Testing welk and wood", "Lorem Ipsum", 42, factionReward, testGoal));
+
     }
 
     private Item RandomItem() {
@@ -46,23 +37,22 @@ public class QuestMaker
         
     }
 
-    // public AllQuests() {
-    //     listOfAllQuests = new List<Quest>();
-    //     listOfAllQuests.Add(new Quest("Deliver materials to location X", 
-    //                             "Give some nice lore here, idk", 
-    //                             50, 
-    //                             GoalType.Deliver, 
-    //                             1));
-    //     listOfAllQuests.Add(new Quest("Find a stable route to location X", 
-    //                             "Give some nice lore here, idk", 
-    //                             123, 
-    //                             GoalType.Explore, 
-    //                             1));
-    //     listOfAllQuests.Add(new Quest("Find the Welkans 3 major outposts", 
-    //                             "Give some nice lore here, idk", 
-    //                             300, 
-    //                             GoalType.Deliver, 
-    //                             1));
-        
-    // }
+    private Faction RandomFaction() {
+        Faction randFact;
+        int randFactNum = UnityEngine.Random.Range(0, 3);
+        Debug.Log("Rnad num" + randFactNum);
+        switch(randFactNum) {
+            default:
+            case 0:
+                randFact = Jura.Instance;
+                break;
+            case 1:
+                randFact = Nardvaal.Instance;
+                break;
+            case 2:
+                randFact = Welkan.Instance;
+                break;
+        }
+        return randFact;
+    }
 }

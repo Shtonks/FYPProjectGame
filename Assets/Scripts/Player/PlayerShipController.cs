@@ -14,7 +14,6 @@ public class PlayerShipController : TopDownShipController
     {
         pb = GetComponent<PlayerBehaviour>();
         rb = GetComponent<Rigidbody2D>();
-        //direction = transform.up;
     }
 
     private void Start() {
@@ -50,7 +49,7 @@ public class PlayerShipController : TopDownShipController
 
     public void SetInputVec(Vector2 inputVec)
     {
-        if(canMove) {
+        if(getCanMove()) {
             steeringInput = inputVec.x;
             accelerationInput = inputVec.y;
         }

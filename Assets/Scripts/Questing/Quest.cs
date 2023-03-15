@@ -5,23 +5,19 @@ using UnityEngine;
 [System.Serializable]
 public class Quest
 {
-    public Item item;
-    public Faction deliveryFact;
     public string title;
     public string desc;
     public int shardReward;
-    public int factionReward; // Type may need to be changed 
+    public int factionReward;
     
     public Goal questGoal;
 
     // Contract Quest specifically
-    public Quest (Item item, Faction fact, string desc, int shardReward, int factionReward, int requiredAmount) {
-        this.item = item;
-        deliveryFact = fact;
-        this.title = fact.getName() + " requires " + item.ToString() + "TETSTTTTTT";
+    public Quest (string title, string desc, int shardReward, int factionReward, Goal goal) {
+        this.title = title;
         this.desc = desc;
         this.shardReward = shardReward;
         this.factionReward = factionReward;
-        questGoal = new Goal( requiredAmount);
+        questGoal = goal;
     }
 }

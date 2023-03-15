@@ -16,7 +16,7 @@ public class TopDownShipController : MonoBehaviour
     float rotationAngle = 0;
     protected float speed = 0;
 
-    public bool canMove = true; // Says if the ship is currenty allowed to move
+    private bool canMove = true; // Says if the ship is currenty allowed to move
     
     protected Rigidbody2D rb;
 

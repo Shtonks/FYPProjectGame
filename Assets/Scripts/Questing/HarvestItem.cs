@@ -13,7 +13,8 @@ public class HarvestItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player") {
-            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>().SetText("Press R to harvest " + islandItem.ToString());
+            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>()
+                .SetText("Press R to harvest " + islandItem.ToString());
             harvestItemPrompt.SetActive(true);
             shopColl = true;
         }

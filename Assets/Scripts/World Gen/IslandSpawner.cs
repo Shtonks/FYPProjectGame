@@ -12,7 +12,7 @@ public class IslandSpawner : MonoBehaviour
 
     void Start()
     {
-        //spawnSingleIslands();
+        spawnSingleIslands();
         spawnShops();
     }
 
@@ -35,19 +35,15 @@ public class IslandSpawner : MonoBehaviour
 
             // All islands drawn in rough circular shapes, so can use this
             float colRadius = singleSpawnPool[i].GetComponent<CircleCollider2D>().radius * 1.5f;
-            //Debug.Log("New pos: " + newPos);           
 
             // If 0, no collisions
-            int size = Physics2D.OverlapCircleAll(pos, colRadius).Length;
-            
             if(Physics2D.OverlapCircleAll(pos, colRadius).Length == 0) {
-                Instantiate(singleSpawnPool[i], pos, singleSpawnPool[i].transform.rotation);
+                singleSpawnPool[i].transform.position = pos;
                 i++;
             }
             attempt++;
-                if(attempt > 10){
-                    Debug.Log("Enemy spawn retry limit hit!!");
-                    break;
+            if(attempt > 100){
+                i++;
             }
         }
     }
@@ -58,6 +54,9 @@ public class IslandSpawner : MonoBehaviour
 
         float screenX, screenY;
         Vector2 pos;
+        int attempt = 0;
+        float colRadius = shop.GetComponent<CircleCollider2D>().radius * 1.5f;
+
 
         for (int i = 0; i < numberShopsToSpawn; i++)
         {
@@ -65,7 +64,14 @@ public class IslandSpawner : MonoBehaviour
             screenY = Random.Range(c.bounds.min.y, c.bounds.max.y);
             pos = new Vector2(screenX, screenY);
 
-            Instantiate(shop, pos, shop.transform.rotation);
+            if(Physics2D.OverlapCircleAll(pos, colRadius).Length == 0) {
+                Instantiate(shop, pos, shop.transform.rotation);
+            }
+            attempt++;
+            if(attempt > 100){
+                i++;
+                Debug.Log("Spawn shop attempt limit hit");
+            }
         }
     }
 
