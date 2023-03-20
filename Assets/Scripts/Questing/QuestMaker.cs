@@ -40,7 +40,7 @@ public class QuestMaker
     private Faction RandomFaction() {
         Faction randFact;
         int randFactNum = UnityEngine.Random.Range(0, 3);
-        Debug.Log("Rnad num" + randFactNum);
+        // Debug.Log("Rnad num" + randFactNum);
         switch(randFactNum) {
             default:
             case 0:

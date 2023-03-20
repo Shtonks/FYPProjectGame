@@ -19,16 +19,25 @@ public class Shield : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Land")
-        {
-            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), col);
-        }
+    // void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     if (collision.gameObject.tag == "Land")
+    //     {
+    //         Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), col);
+    //     }
 
-        if (collision.gameObject.tag == "Bomber")
+    //     if (collision.gameObject.tag == "Bomber")
+    //     {
+    //         Destroy(collision.gameObject);
+    //         GetComponentInParent<PlayerBehaviour>().Heal(1);
+    //         Debug.Log("Shield destroyed enemy");
+    //     }
+    // }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Bomber")
         {
-            Destroy(collision.gameObject);
+            Destroy(other.gameObject);
             GetComponentInParent<PlayerBehaviour>().Heal(1);
             Debug.Log("Shield destroyed enemy");
         }
@@ -48,7 +57,7 @@ public class Shield : MonoBehaviour
         }
 
         if(!col.enabled && countdown < 7) {
-            ShieldRecharge();
+            ShieldRecharge();   
         }
     }
 

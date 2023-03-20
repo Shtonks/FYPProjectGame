@@ -17,22 +17,20 @@ public class PlayerUIManager : MonoBehaviour
     private int lastFuelLvl;
     private int lastShards;
 
-    public int health;
+    // public int health;
 
     public List<GameObject> healthStatusBar;
     public int maxHealth;
 
     void Start()
     {
-        health = pb.GetHealth();
+        // health = pb.GetHealth();
         maxHealth = GameManager.gameManager.Health.MaxHealth;
 
         txtSpeed.text = "0" + pb.speed.ToString();
         txtFuel.text = pb.fuelLvl.ToString();
         txtShards.text = pb.shards.ToString();
     }
-
-    // TO FIX:: these last vals are never being uodated, they are isless rn. update
 
     void Update()
     {
@@ -46,7 +44,7 @@ public class PlayerUIManager : MonoBehaviour
         }
 
         if (lastHealth != pb.GetHealth()) {
-            setHealthStatusBar(pb.GetHealth());
+            SetHealthStatusBar(pb.GetHealth());
             lastHealth = pb.GetHealth();
         }
 
@@ -59,7 +57,7 @@ public class PlayerUIManager : MonoBehaviour
         }
     }
 
-    private void setHealthStatusBar(int currentHealth) {
+    private void SetHealthStatusBar(int currentHealth) {
         for (int i = 0; i < maxHealth; i++)
         {
             if(i < currentHealth) {

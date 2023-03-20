@@ -37,6 +37,8 @@ public class UnitHealth
     public void dmgUnit(int dmgAmount) {
         if (currentHealth > 0) {
             currentHealth -= dmgAmount;
+        } else {
+            GameManager.gameManager.GameOver();
         }
     }
 

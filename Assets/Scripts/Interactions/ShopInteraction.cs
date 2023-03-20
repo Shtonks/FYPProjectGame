@@ -6,41 +6,65 @@ using UnityEngine.UI;
 
 public class ShopInteraction : GenericShopInteraction
 {
-    public Quest quest;
-    public QuestMaker questMaker = new QuestMaker();
-    public QuestTracker questTracker;
+    public List<Quest> quests;
+    public int numOfQuests;
+    private int currentVisibleQuest;
     public Button contractSelect;
+    public Button contractAbandon;
 
     // Quest window elements
     public GameObject questWindow;
     public TMP_Text txtTitle;
-    public TMP_Text txtDesc;
+    //public TMP_Text txtDesc;
     public TMP_Text txtShardReward;
-    //public TMP_Text txtFactionReward;
+    public TMP_Text txtFactionReward;
 
+    public QuestTracker questTracker;
 
-    public void OpenQuestWindow() {
-        quest = questMaker.GenQuest();
+    private void Start() {
+        contractAbandon.interactable = false;
+        numOfQuests = 2;
+        quests = new List<Quest>();
+        QuestMaker questMaker = new QuestMaker();
+        Debug.Log("Made it here");
+        for (int i = 0; i <= numOfQuests; i++)
+        {
+            Debug.Log("Quest: " + i);
+            quests.Add(questMaker.GenQuest());
+            Debug.Log("Details:" + quests[i].title);
+        }
+        currentVisibleQuest = 0;
+    }
+
+    private void OnDisable() {
+        questWindow.SetActive(false);
+        //Debug.Log("DEACTIVATING");
+    }
+
+    public void CycleQuestWindow() {
         questWindow.SetActive(true);
-        txtTitle.text = quest.title.ToString();
-        txtDesc.text = quest.desc.ToString();
-        txtShardReward.text = quest.shardReward.ToString();
-        //txtFactionReward.text = quest.factionReward.ToString();
+        txtTitle.text = quests[currentVisibleQuest].title.ToString();
+        //txtDesc.text = quest.desc.ToString();
+        txtShardReward.text = quests[currentVisibleQuest].shardReward.ToString();
+        txtFactionReward.text = quests[currentVisibleQuest].factionReward.ToString();
+        currentVisibleQuest++;
+        if(currentVisibleQuest >= numOfQuests) currentVisibleQuest = 0;
     }
 
     public void AcceptQuest() {
         questWindow.SetActive(false);
-        // Means can only take on 1 quest for now. not ideal
+        pb.quests.Add(quests[currentVisibleQuest]);
+        questTracker.CreateQuestTracker(quests[currentVisibleQuest].title, quests[currentVisibleQuest].desc, 1);
         contractSelect.interactable = false;
-        pb.quests.Add(quest);
-        questTracker.CreateQuestTracker(quest.title, quest.desc, 1);
+        contractAbandon.interactable = true;
     }
 
     public void AbandonQuest() {
-        // Shards penalty of -50% what you wouls have got
-        pb.shards -= quest.shardReward / 2;
-        contractSelect.interactable = true;
-        pb.quests.Remove(quest);
+        // Shards penalty of -50% what you would have got
+        pb.shards -= quests[currentVisibleQuest].shardReward / 2;
+        pb.quests.Remove(quests[currentVisibleQuest]);
         questTracker.DeactivateTracker();
+        contractSelect.interactable = true;
+        contractAbandon.interactable = false;
     }
 }

@@ -20,4 +20,8 @@ public class GameManager : MonoBehaviour
             gameManager = this;
         }
     }
+
+    public void GameOver() {
+        Debug.Log("You died");
+    }
 }
