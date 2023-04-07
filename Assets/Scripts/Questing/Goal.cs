@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Goal{}
+public class Goal{
+    public Faction faction;
+}
 
 public class DeliveryGoal : Goal
 {
-    public Faction faction;
     public Item itemWanted;
 
     public DeliveryGoal(Faction faction, Item item) {

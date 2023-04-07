@@ -60,6 +60,3 @@ TagManager:
   - name: UI
     uniqueID: 2737287149
     locked: 0
-  - name: Text
-    uniqueID: 1264759611
-    locked: 0

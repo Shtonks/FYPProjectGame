@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static int startHealth = 8;
     public static int maxHealth = 8;
+    public GameObject GameOverUI;
+
+    public List<Item> allItems;
 
     public static GameManager gameManager { get; private set; }
     public UnitHealth Health = new UnitHealth(startHealth, maxHealth);
@@ -23,5 +26,6 @@ public class GameManager : MonoBehaviour
 
     public void GameOver() {
         Debug.Log("You died");
+        GameOverUI.SetActive(true);
     }
 }

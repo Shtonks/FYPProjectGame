@@ -18,6 +18,13 @@ public class PlayerShipController : TopDownShipController
 
     private void Start() {
         lastPos = transform.position;
+        maxSpeed = pb.maxShipSpeed;
+        accelerationFactor = pb.accelFactor;
+    }
+
+    private void Update() {
+        maxSpeed = pb.maxShipSpeed;
+        accelerationFactor = pb.accelFactor;
     }
 
     void FixedUpdate() 

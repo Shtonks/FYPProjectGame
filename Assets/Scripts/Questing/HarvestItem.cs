@@ -7,14 +7,14 @@ public class HarvestItem : MonoBehaviour
 {
     public Item islandItem;
     public GameObject harvestItemPrompt;
-    public PlayerBehaviour playerBehaviour;
+    public PlayerBehaviour pb;
 
     private bool shopColl = false;
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player") {
             harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>()
-                .SetText("Press R to harvest " + islandItem.ToString());
+                .SetText("Press R to harvest " + islandItem.name);
             harvestItemPrompt.SetActive(true);
             shopColl = true;
         }
@@ -30,7 +30,8 @@ public class HarvestItem : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.R) && shopColl) {
-            playerBehaviour.items.Add(islandItem);
+            pb.AddItem(islandItem);
+            //Debug.Log("Item added!");
         }
     }
 }

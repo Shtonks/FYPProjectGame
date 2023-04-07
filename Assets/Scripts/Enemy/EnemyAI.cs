@@ -146,14 +146,4 @@ public class EnemyAI : MonoBehaviour
             state = State.Roaming;
         }
     }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<PlayerBehaviour>().TakeDmg(1);
-            Destroy(gameObject);
-            //Debug.Log("Bomber coll");
-        }
-    }
 }

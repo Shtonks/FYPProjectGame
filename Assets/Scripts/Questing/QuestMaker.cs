@@ -26,15 +26,9 @@ public class QuestMaker
 
     }
 
-    private Item RandomItem() {
-        System.Random random = new System.Random();
-
-        Type type = typeof(Item);
-        Array values = type.GetEnumValues();
-        int index = random.Next(values.Length);
-
-        return (Item)values.GetValue(index);
-        
+    private Item RandomItem() { 
+        int randItemNum = UnityEngine.Random.Range(0, GameManager.gameManager.allItems.Count);
+        return GameManager.gameManager.allItems[randItemNum];
     }
 
     private Faction RandomFaction() {

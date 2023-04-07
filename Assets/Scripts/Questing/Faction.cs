@@ -6,18 +6,30 @@ public class Faction
 {
     // repuatation
     private int rep;
+    private int maxRep;
+    private int minRep;
     protected string name;
 
     public Faction (){
-        rep = 0;
+        rep = 50;
+        maxRep = 100;
+        minRep = 0;
     }
 
     public void increaseRep(int n) {
-        rep += n;
+        if(rep + n < maxRep) {
+            rep += n;
+        } else {
+            rep = 100;
+        }
     }
 
     public void decreaseRep(int n) {
-        rep -= n;
+        if(rep - n > minRep) {
+            rep -= n;
+        } else {
+            rep = 0;
+        }
     }
 
     public int getRep() {
@@ -26,6 +38,14 @@ public class Faction
 
     public string getName() {
         return name;
+    }
+
+    public int getMaxRep() {
+        return maxRep;
+    }
+
+    public int getMinRep() {
+        return minRep;
     }
 }
 
@@ -102,6 +122,32 @@ public class Welkan : Faction
                 if (instance == null)
                 {
                     instance = new Welkan();
+                }
+                return instance;
+            }
+        }
+    }
+}
+
+public class RintochGateway : Faction
+{
+    private static RintochGateway instance = null;
+    private static readonly object padlock = new object();
+
+    protected RintochGateway() : base()
+    {
+        name = "RintochGateway";
+    }
+
+    public static RintochGateway Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new RintochGateway();
                 }
                 return instance;
             }

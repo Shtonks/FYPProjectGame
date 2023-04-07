@@ -23,38 +23,39 @@ public class ShopInteraction : GenericShopInteraction
 
     private void Start() {
         contractAbandon.interactable = false;
-        numOfQuests = 2;
         quests = new List<Quest>();
         QuestMaker questMaker = new QuestMaker();
-        Debug.Log("Made it here");
         for (int i = 0; i <= numOfQuests; i++)
         {
-            Debug.Log("Quest: " + i);
+            //Debug.Log("Quest: " + i);
             quests.Add(questMaker.GenQuest());
-            Debug.Log("Details:" + quests[i].title);
+            //Debug.Log("Quest: " + quests[i].title);
+            //Debug.Log("Details:" + quests[i].title);
         }
         currentVisibleQuest = 0;
     }
 
     private void OnDisable() {
-        questWindow.SetActive(false);
+        //questWindow.SetActive(false);
         //Debug.Log("DEACTIVATING");
     }
 
     public void CycleQuestWindow() {
         questWindow.SetActive(true);
+        Debug.Log("current vis quest " + currentVisibleQuest + "Quests size: " + quests.Count);
         txtTitle.text = quests[currentVisibleQuest].title.ToString();
         //txtDesc.text = quest.desc.ToString();
         txtShardReward.text = quests[currentVisibleQuest].shardReward.ToString();
-        txtFactionReward.text = quests[currentVisibleQuest].factionReward.ToString();
+        //txtFactionReward.text = quests[currentVisibleQuest].factionReward.ToString();
         currentVisibleQuest++;
-        if(currentVisibleQuest >= numOfQuests) currentVisibleQuest = 0;
+        if(currentVisibleQuest > numOfQuests) currentVisibleQuest = 0;
     }
 
     public void AcceptQuest() {
         questWindow.SetActive(false);
+        Debug.Log("current vis quest " + currentVisibleQuest + "Quests size: " + quests.Count);
         pb.quests.Add(quests[currentVisibleQuest]);
-        questTracker.CreateQuestTracker(quests[currentVisibleQuest].title, quests[currentVisibleQuest].desc, 1);
+        questTracker.ActivateTracker(quests[currentVisibleQuest]);
         contractSelect.interactable = false;
         contractAbandon.interactable = true;
     }

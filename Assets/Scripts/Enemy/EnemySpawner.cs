@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void spawnEnemies()
     {
-        MeshCollider c = quad.GetComponent<MeshCollider>();
+        Collider2D c = quad.GetComponent<CircleCollider2D>();
 
         float screenX, screenY;
         Vector2 pos;

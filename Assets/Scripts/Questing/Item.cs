@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Item {
-    Food,
-    Wood,
-    Iron,
-    Marble,
-    Obsidian,
-    GlowOil
-}
+[CreateAssetMenu(fileName = "New Item", menuName = "Item", order = 1)]
+public class Item : ScriptableObject{
+    public new string name;
+    public Sprite itemSprite;
 
+    public void Init() {
+        name = "";
+        itemSprite = null;
+    }
+}

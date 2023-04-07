@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class TopDownShipController : MonoBehaviour
 {
-    public float accelerationFactor = 30.0f;
+    public float accelerationFactor;
     public float turnFactor = 3.5f;
     public float driftFactor = 0.3f;
-    public float maxSpeed = 20.0f;
+    public float maxSpeed;
     public float fuelBurnDistance = 200f;
 
     // Local vars

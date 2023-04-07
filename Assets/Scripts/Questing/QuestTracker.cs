@@ -13,7 +13,7 @@ public class QuestTracker : MonoBehaviour
         questTrackerTemplate.gameObject.SetActive(false);
     }
 
-    public void CreateQuestTracker(string title, string desc, int posIndex) {
+    public void CreateQuestTracker(string title, int shardReward, int posIndex) {
         questTrackerTransform = Instantiate(questTrackerTemplate, gameObject.transform);
         questTrackerTransform.gameObject.SetActive(true);
         RectTransform questTrackerRectTransform = questTrackerTransform.GetComponent<RectTransform>();
@@ -26,11 +26,11 @@ public class QuestTracker : MonoBehaviour
         questTrackerRectTransform.anchoredPosition = new Vector2(Xloc - edgeOffset, (Yloc - edgeOffset) * posIndex);
 
         questTrackerTransform.Find("QuestTitle").GetComponent<TextMeshProUGUI>().SetText(title);
-        questTrackerTransform.Find("QuestDesc").GetComponent<TextMeshProUGUI>().SetText(desc);
+        questTrackerTransform.Find("QuestReward").GetComponent<TextMeshProUGUI>().SetText("Reward: " + shardReward);
     }
 
     public void ActivateTracker(Quest quest) {
-        CreateQuestTracker(quest.title, quest.desc, 0);
+        CreateQuestTracker(quest.title, quest.shardReward, 1);
     }
 
     public void DeactivateTracker() {

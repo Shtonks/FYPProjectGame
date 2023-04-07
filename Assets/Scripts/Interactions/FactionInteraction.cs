@@ -21,8 +21,8 @@ public class FactionInteraction : GenericShopInteraction
             if (q.questGoal.GetType() == typeof(DeliveryGoal)) {        // Check the goal type
                 DeliveryGoal delGoal = ((DeliveryGoal)q.questGoal);     // Cast the goal to DeliveryGoal
                 if(delGoal.faction == this.faction) {                   // Check if is right faction
-                    foreach(Item item in pb.items) {                    // For all player items 
-                        if(item == delGoal.itemWanted) {                // Check if player has wanted item
+                    foreach(KeyValuePair<int, Item> slot in pb.inventory.inventoryItems) {
+                        if(slot.Value == delGoal.itemWanted) {
                             pb.QuestComplete(q);
                             Debug.Log("DeliveredItem!");
                             return;
