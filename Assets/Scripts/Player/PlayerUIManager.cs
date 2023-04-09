@@ -27,6 +27,12 @@ public class PlayerUIManager : MonoBehaviour
     public Slider nardvaalRepSlider;
     public Slider welkanRepSlider;
 
+    private bool mapOpen;
+    public Transform mapContainer;
+    public Image playerIcon;
+    public Image islandIcon;
+    public Image factionIcon;
+
     private int lastSpeed;
     public int lastHealth;
     private int lastFuelLvl;
@@ -53,6 +59,9 @@ public class PlayerUIManager : MonoBehaviour
         nardvaalRepSlider.maxValue = Nardvaal.Instance.getMaxRep();
         nardvaalRepSlider.value = Nardvaal.Instance.getRep();
         Debug.Log("Max val:" + Nardvaal.Instance.getMaxRep() + "Curr val: " + Nardvaal.Instance.getRep());
+
+        islandIcon.gameObject.SetActive(false);
+        factionIcon.gameObject.SetActive(false);
     }
 
     void Update()
@@ -77,6 +86,17 @@ public class PlayerUIManager : MonoBehaviour
 
         if (lastShards != pb.shards) {
             txtShards.text = pb.shards.ToString();
+        }
+
+        if(Input.GetKeyDown(KeyCode.M)) {
+            if(!mapOpen) {
+                UpdateMapPlayerPos(gameObject.transform.position);
+                mapContainer.gameObject.SetActive(true);
+                mapOpen = true;
+            } else {
+                mapContainer.gameObject.SetActive(false);
+                mapOpen = false;
+            }
         }
         
     }
@@ -145,5 +165,24 @@ public class PlayerUIManager : MonoBehaviour
                 nardvaalRepSlider.value = rep;
                 break;
         }
+    }
+
+    public void UpdateMapPOI(Vector2 islandPos, Item islandItem) {
+        Debug.Log("Island pos: " + islandPos);
+        Image newIslandIcon = Instantiate(islandIcon, mapContainer);
+        newIslandIcon.sprite = islandItem.itemSprite;
+        newIslandIcon.gameObject.GetComponent<RectTransform>().anchoredPosition = islandPos;
+        newIslandIcon.gameObject.SetActive(true);
+    }
+
+    public void UpdateMapFaction(Vector2 factionPos, Faction fact) {
+        Image newFactionIcon = Instantiate(factionIcon, mapContainer);
+        newFactionIcon.sprite = Resources.Load<Sprite>("/Sprites/Sigils/" + fact.getName() + "Sigil");
+        newFactionIcon.gameObject.GetComponent<RectTransform>().anchoredPosition = factionPos;
+        newFactionIcon.gameObject.SetActive(true);
+    }
+
+    public void UpdateMapPlayerPos(Vector2 playerPos) {
+        playerIcon.gameObject.GetComponent<RectTransform>().anchoredPosition = playerPos;
     }
 }

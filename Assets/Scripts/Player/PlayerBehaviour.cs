@@ -65,8 +65,7 @@ public class PlayerBehaviour : MonoBehaviour
         Debug.Log(quest.title + " completed!!");
         shards += quest.shardReward;
         quests.Remove(quest);
-        //IncreaseFactioRep(quest.questGoal.faction, quest.factionReward);
-        IncreaseFactioRep(Nardvaal.Instance, 15);
+        IncreaseFactioRep(quest.questGoal.faction, quest.factionReward);
     }
 
     public void IncreaseFactioRep(Faction fact, int repInc) {

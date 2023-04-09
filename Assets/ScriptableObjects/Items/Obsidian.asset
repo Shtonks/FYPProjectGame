@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Obsidian
   m_EditorClassIdentifier: 
   name: Obsidian
-  sprite: {fileID: 21300000, guid: 9cdc61e61f1bfa34394faab2df074d6f, type: 3}
+  itemSprite: {fileID: 21300000, guid: 9cdc61e61f1bfa34394faab2df074d6f, type: 3}

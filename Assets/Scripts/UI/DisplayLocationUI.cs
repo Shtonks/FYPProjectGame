@@ -43,6 +43,10 @@ public class DisplayLocationUI : MonoBehaviour
                 inMenu = true;
                 locationUIPrompt.SetActive(false);
                 locationUI.SetActive(true);
+                if(locationUI.name == "ShopUI"){
+                    ShopInteraction.instance.shopInfo = gameObject.GetComponent<Shop>();
+                    //Debug.Log("Successly set shop component i thinkl");
+                }
             } else {
                 inMenu = false;
                 ship.GetComponent<TopDownShipController>().setCanMove(true);

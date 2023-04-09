@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Marble
   m_EditorClassIdentifier: 
   name: Marble
-  sprite: {fileID: 21300000, guid: a99db155b420c1a439e32aa898950b08, type: 3}
+  itemSprite: {fileID: 21300000, guid: a99db155b420c1a439e32aa898950b08, type: 3}

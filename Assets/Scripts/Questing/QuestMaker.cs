@@ -11,7 +11,7 @@ public class QuestMaker
         Item randItem = RandomItem();
         Faction randFact = RandomFaction();
 
-        string title = randFact.getName() + " requires " + randItem.ToString();
+        string title = randFact.getName() + " requires " + randItem.name;
         // Random reward. Reward size decision could be improved
         int shardReward = UnityEngine.Random.Range(50, 200);
         int factionReward = 3;

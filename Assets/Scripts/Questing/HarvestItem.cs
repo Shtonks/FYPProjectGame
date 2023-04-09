@@ -6,17 +6,25 @@ using UnityEngine;
 public class HarvestItem : MonoBehaviour
 {
     public Item islandItem;
+    private bool isDiscovered;
     public GameObject harvestItemPrompt;
     public PlayerBehaviour pb;
 
-    private bool shopColl = false;
+    private bool shopColl;
+
+    private void Start() {
+        shopColl = false;
+        isDiscovered = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player") {
-            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>()
-                .SetText("Press R to harvest " + islandItem.name);
+            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>().SetText("Press R to harvest " + islandItem.name);
             harvestItemPrompt.SetActive(true);
             shopColl = true;
+            if(!isDiscovered) {
+                OnDiscovery();
+            }
         }
     }
 
@@ -33,5 +41,11 @@ public class HarvestItem : MonoBehaviour
             pb.AddItem(islandItem);
             //Debug.Log("Item added!");
         }
+    }
+
+    private void OnDiscovery() {
+        isDiscovered = true;
+        pb.playerUIManager.UpdateMapPOI(transform.position, islandItem);
+        //transform
     }
 }

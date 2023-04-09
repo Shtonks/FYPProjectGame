@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Faction
 {
@@ -59,6 +60,7 @@ public class Jura : Faction
     protected Jura() : base()
     {
         name = "Jura";
+
     }
 
     public static Jura Instance

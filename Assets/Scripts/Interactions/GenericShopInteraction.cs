@@ -16,12 +16,14 @@ public class GenericShopInteraction : MonoBehaviour
     public int accelPrice = 10;
     public int shieldRechPrice = 30;
     public int shieldDurPrice = 10;
+    public int invExpandPrice = 1000;
 
     public TMP_Text maxSpeedPriceTxt;
     public TMP_Text fuelCapPriceTxt;
     public TMP_Text accelPriceTxt;
     public TMP_Text shieldRechPriceTxt;
     public TMP_Text shieldDurPriceTxt;
+    public TMP_Text invExpandPriceTxt;
 
     private void Update() {
         maxSpeedPriceTxt.text = maxSpeedPrice.ToString();
@@ -29,6 +31,7 @@ public class GenericShopInteraction : MonoBehaviour
         accelPriceTxt.text = accelPrice.ToString();
         shieldRechPriceTxt.text = shieldRechPrice.ToString();
         shieldRechPriceTxt.text = shieldRechPrice.ToString();
+        invExpandPriceTxt.text = invExpandPrice.ToString();
     }
 
 
@@ -98,8 +101,12 @@ public class GenericShopInteraction : MonoBehaviour
     }
 
     public void InventorySlotInc() {
-        if(pb.inventory.ExpandInvSlots()) {
-            pb.playerUIManager.ActivateNewItemSlot();
+        if(pb.shards >= invExpandPrice) {
+            if(pb.inventory.ExpandInvSlots()) {
+                pb.playerUIManager.ActivateNewItemSlot();
+                pb.shards -= invExpandPrice;
+                invExpandPrice *= 2;
+            }
         }
     }
 }

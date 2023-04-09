@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GlowOil
   m_EditorClassIdentifier: 
   name: Glow Oil
-  sprite: {fileID: 21300000, guid: eb29f2f8cf38b8a48a1a6332b64aa1a2, type: 3}
+  itemSprite: {fileID: 21300000, guid: eb29f2f8cf38b8a48a1a6332b64aa1a2, type: 3}
