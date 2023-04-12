@@ -5,20 +5,22 @@ using UnityEngine;
 
 public class IslandSpawner : MonoBehaviour
 {
-    public int numShopsToSpawn;
-    //public List<GameObject> multiSpawnPool;
-    public List<GameObject> factionSpawnPool;
-    public List<GameObject> POISpawnPool;
     public GameObject mainSpawnCircle;
     public GameObject factionSpawnCircle;
+
+    public List<GameObject> factionSpawnPool;
+    
+    public float POIColOffset = 1.5f;
+    public List<GameObject> POISpawnPool;
+
     public GameObject shop;
+    public int numShopsToSpawn;
+    public float shopCollOffset;
+
     private int effectedLayers;
     CircleCollider2D c;
 
-    public float POIColOffset = 1.5f;
-
-    void Start()
-    {
+    public void SpawnAll() {
         c = mainSpawnCircle.GetComponent<CircleCollider2D>();
         effectedLayers = LayerMask.GetMask("Land");
         SpawnFactions();
@@ -43,9 +45,10 @@ public class IslandSpawner : MonoBehaviour
             spawnCir.transform.position = spawnCentres[i];
             float randRadLength = Random.Range(0f, spawnCir.bounds.max.x);
             Vector2 pos = spawnCentres[i] + GetRandomDir() * randRadLength;
-            factionSpawnPool[i].transform.position = pos;
+            Instantiate(factionSpawnPool[i], pos, factionSpawnPool[i].transform.rotation);
+            //factionSpawnPool[i].transform.position = pos;
             //TEMP: Just shows sizes of spawn region for facts
-            Instantiate(spawnCir, spawnCir.transform.position, spawnCir.transform.rotation);
+            //Instantiate(spawnCir, spawnCir.transform.position, spawnCir.transform.rotation);
         }
     }
 
@@ -67,20 +70,18 @@ public class IslandSpawner : MonoBehaviour
         foreach (GameObject island in POISpawnPool){
             // Collision radius is calced: scaleOfObj * colliderRadius * offset
             float colRadius = island.transform.localScale.x * island.GetComponent<CircleCollider2D>().radius * POIColOffset;
-
-            if(SpawnLoc(1, island, 50, colRadius) == false){
+            bool result = SpawnLoc(1, island, 50, colRadius);
+            
+            if(!result){
                 for (int i = 0; i < backupPOISpawnPoints.Count(); i++)
                 {
                     if(Physics2D.OverlapCircleAll(backupPOISpawnPoints[i], colRadius, effectedLayers).Length == 0) {
-                        Debug.Log("Used default spawn pos: "+ i );
                         island.transform.position = backupPOISpawnPoints[i];
                         break;
                     }
                 }
             }
         }
-
-
     }
 
     private bool SpawnLoc(int numToSpawn, GameObject objToSpawn, int spawnRetryLimit, float colRadius) {
@@ -89,7 +90,7 @@ public class IslandSpawner : MonoBehaviour
         {
             // Circle spawning
             // Get spawn pos by picking a random dir and then picking a random length of circle rad and spawning there 
-            float randRadLength = Random.Range(0f, c.bounds.max.x);
+            float randRadLength = Random.Range(50f, c.bounds.max.x);
             Vector2 pos = Vector2.zero + GetRandomDir() * randRadLength;
 
             if(Physics2D.OverlapCircleAll(pos, colRadius, effectedLayers).Length == 0) {
@@ -99,7 +100,6 @@ public class IslandSpawner : MonoBehaviour
                 i--;
             }
             if(attempt > spawnRetryLimit){
-                Debug.Log("Spawn POI retry limit hit");
                 return false;
             }
         }

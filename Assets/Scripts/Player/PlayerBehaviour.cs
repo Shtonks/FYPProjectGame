@@ -46,6 +46,22 @@ public class PlayerBehaviour : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha4)) {
             DestroyItem(4);
         }
+        if(shards < -500) {
+            shards = -500;
+            GameManager.gameManager.GameOverScreen("debt", null);
+        }
+    }
+
+    public void DecreaseFuel() {
+        if(fuelLvl > 0) {
+            fuelLvl -= 1;
+        } else {
+            if (GetHealth() - 1 > 0) {
+                TakeDmg(1);
+            } else {
+                GameManager.gameManager.GameOverScreen("burnoutDeath", null);
+            }
+        }
     }
 
     public void TakeDmg(int dmg) {
@@ -61,11 +77,16 @@ public class PlayerBehaviour : MonoBehaviour
         return GameManager.gameManager.Health.Health;
     }
 
-    public void QuestComplete(Quest quest) {
-        Debug.Log(quest.title + " completed!!");
+    public void QuestComplete(Quest quest, Faction chosenFact) {
         shards += quest.shardReward;
         quests.Remove(quest);
-        IncreaseFactioRep(quest.questGoal.faction, quest.factionReward);
+        IncreaseFactioRep(chosenFact, quest.factionReward);
+        foreach(Faction f in quest.questGoal.factions) {
+            if(f != chosenFact) {
+                DecreaseFactioRep(f, quest.factionReward);
+            }
+        }
+        ShopInteraction.instance.QuestComplete();
     }
 
     public void IncreaseFactioRep(Faction fact, int repInc) {
@@ -73,9 +94,14 @@ public class PlayerBehaviour : MonoBehaviour
         playerUIManager.SetFactionRep(fact, fact.getRep());
     }
 
+    public void DecreaseFactioRep(Faction fact, int repInc) {
+        float repDecreasePenalty = 1.5f;
+        fact.decreaseRep((int)(repInc * repDecreasePenalty));
+        playerUIManager.SetFactionRep(fact, fact.getRep());
+    }
+
     public void AddItem(Item newItem) {
         int key = inventory.AddItem(newItem);
-        Debug.Log("Key: "+ key);
         if(key > -1) {
             playerUIManager.UpdateItemSlotIcon(key, newItem);
         }

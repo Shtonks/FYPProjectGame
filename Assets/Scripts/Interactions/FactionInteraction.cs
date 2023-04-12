@@ -6,42 +6,44 @@ using UnityEngine.UI;
 public class FactionInteraction : GenericShopInteraction
 {
     public Faction faction;
-    public Image vendorImg;
 
     private void Start() {
-        if(gameObject.name == "JuraUI") {
-            faction = Jura.Instance;
-            vendorImg.sprite = Resources.Load<Sprite>("/Sprites/Shop/Vendors/JuraVendor");
-        } else if(gameObject.name == "NardvaalUI") {
-            faction = Nardvaal.Instance;
-            vendorImg.sprite = Resources.Load<Sprite>("/Sprites/Shop/Vendors/NardvaalVendor");
-        } else {
-            faction = Welkan.Instance;
-            vendorImg.sprite = Resources.Load<Sprite>("/Sprites/Shop/Vendors/WelkanVendor");
+        switch(gameObject.name) {
+            case "JuraUI": 
+                faction = Jura.Instance;
+                Debug.Log("In jura startup");
+                break;
+            case "NardvaalUI":
+                faction = Nardvaal.Instance;
+                break;
+            case "WelkanUI":
+                faction = Welkan.Instance;
+                break;
         }
     }
 
     public void DeliverItem() {
-        foreach (Quest q in pb.quests) {                                // For every quest
-            if (q.questGoal.GetType() == typeof(DeliveryGoal)) {        // Check the goal type
-                DeliveryGoal delGoal = ((DeliveryGoal)q.questGoal);     // Cast the goal to DeliveryGoal
-                if(delGoal.faction == this.faction) {                   // Check if is right faction
-                    foreach(KeyValuePair<int, Item> slot in pb.inventory.inventoryItems) {
-                        if(slot.Value == delGoal.itemWanted) {
-                            pb.QuestComplete(q);
-                            Debug.Log("DeliveredItem!");
-                            return;
-                        }
+        Debug.Log("fact name: "+ faction.getName());
+
+        if(pb.quests.Count > 0) {
+            DeliveryGoal delGoal = ((DeliveryGoal)pb.quests[0].questGoal); 
+            // Debug.Log("Del goal: "+ delGoal.itemWanted.name + "   " + delGoal.faction.getName());
+            delGoal.DisplayAllFacts();
+            if(delGoal.IsFactionFound(faction)) {
+                foreach(KeyValuePair<int, Item> slot in pb.inventory.inventoryItems) {
+                    if(slot.Value == delGoal.itemWanted) {
+                        Debug.Log("CHOSEN FACT: "+ faction.getName());
+                        pb.QuestComplete(pb.quests[0], faction);
+                        pb.DestroyItem(slot.Key);
+                        GameManager.gameManager.questTracker.DeactivateTracker();
+                        Debug.Log("Delivered Item!");
+                        return;
                     }
-                    Debug.Log("No item to deliver found");
+                    Debug.Log("Item not valid: " + slot.Value.name);
                 }
             }
+            Debug.Log("Wrong faction kiddo");
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-        if(other.tag == "Player") {
-            pb.playerUIManager.UpdateMapFaction(gameObject.transform.position, faction);
-        }
+        Debug.Log("No quest active");
     }
 }

@@ -38,15 +38,6 @@ public class PlayerShipController : TopDownShipController
         TrackDistance();
     }
 
-    // TO MAYBE DO: Fix boosting. Not smooth due to 0 drag in game
-    // private void Update() {
-    //     if(Input.GetKeyDown(KeyCode.E)) {
-    //         Debug.Log("boostin");
-    //         Vector2 engineForceVec = transform.right * boost;
-    //         rb.AddForce(engineForceVec, ForceMode2D.Force);
-    //     }
-    // }
-
     // Makes the ship move forward/backward
     public override void ApplyEngineForce()
     {
@@ -68,7 +59,7 @@ public class PlayerShipController : TopDownShipController
         lastPos = transform.position ;
         if(totalDistance >  fuelBurnDistance) {
             totalDistance = 0;
-            pb.fuelLvl -= 1;
+            pb.DecreaseFuel();
         }
     }
 

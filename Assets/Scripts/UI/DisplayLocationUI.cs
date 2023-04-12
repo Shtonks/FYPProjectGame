@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisplayLocationUI : MonoBehaviour
+public class DisplayLocationUI : Menu
 {
     [SerializeField] private GameObject locationUI;
     [SerializeField] private GameObject locationUIPrompt;
@@ -36,18 +36,21 @@ public class DisplayLocationUI : MonoBehaviour
     void Update()
     {
         // Checks if player is in range of shop and displays if so
-        if(Input.GetKeyDown(KeyCode.R) && locColl) {
+        if(Input.GetKeyDown(KeyCode.E) && locColl) {
             //ToggleMenu();
 
-            if(!inMenu) {
+            if(!inMenu  && GameManager.menuOpen.Equals("")) {
+                Time.timeScale = 0f;
+                GameManager.menuOpen = "locationUI";
                 inMenu = true;
                 locationUIPrompt.SetActive(false);
                 locationUI.SetActive(true);
                 if(locationUI.name == "ShopUI"){
                     ShopInteraction.instance.shopInfo = gameObject.GetComponent<Shop>();
-                    //Debug.Log("Successly set shop component i thinkl");
                 }
-            } else {
+            } else if(GameManager.menuOpen.Equals("locationUI")) {
+                Time.timeScale = 1f;
+                GameManager.menuOpen = "";
                 inMenu = false;
                 ship.GetComponent<TopDownShipController>().setCanMove(true);
                 locationUI.SetActive(false);

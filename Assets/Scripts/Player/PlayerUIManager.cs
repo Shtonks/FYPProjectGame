@@ -9,9 +9,9 @@ public class PlayerUIManager : MonoBehaviour
     public PlayerBehaviour pb;
     
     public TMP_Text txtSpeed;
-    public TMP_Text txtHealth;
     public TMP_Text txtFuel;
     public TMP_Text txtShards;
+    public TMP_Text txtFuelCap;
 
     public Image itemSlotIcon1;
     public Image itemSlotIcon2;
@@ -51,6 +51,7 @@ public class PlayerUIManager : MonoBehaviour
         txtSpeed.text = "0" + pb.speed.ToString();
         txtFuel.text = pb.fuelLvl.ToString();
         txtShards.text = pb.shards.ToString();
+        txtFuelCap.text = pb.maxFuelLvl.ToString();
 
         juraRepSlider.maxValue = Jura.Instance.getMaxRep();
         juraRepSlider.value = Jura.Instance.getRep();
@@ -58,7 +59,6 @@ public class PlayerUIManager : MonoBehaviour
         welkanRepSlider.value = Welkan.Instance.getRep();
         nardvaalRepSlider.maxValue = Nardvaal.Instance.getMaxRep();
         nardvaalRepSlider.value = Nardvaal.Instance.getRep();
-        Debug.Log("Max val:" + Nardvaal.Instance.getMaxRep() + "Curr val: " + Nardvaal.Instance.getRep());
 
         islandIcon.gameObject.SetActive(false);
         factionIcon.gameObject.SetActive(false);
@@ -80,23 +80,30 @@ public class PlayerUIManager : MonoBehaviour
             lastHealth = pb.GetHealth();
         }
 
-        if (lastFuelLvl != pb.fuelLvl) {
-            txtFuel.text = pb.fuelLvl.ToString();
-        }
-
         if (lastShards != pb.shards) {
             txtShards.text = pb.shards.ToString();
         }
 
+        if(pb.fuelLvl < 10) {
+                txtFuel.text = "0" + pb.fuelLvl.ToString();
+            }else {
+                txtFuel.text = pb.fuelLvl.ToString();
+            }
+
+        txtFuelCap.text = pb.maxFuelLvl.ToString();
+
         if(Input.GetKeyDown(KeyCode.M)) {
-            if(!mapOpen) {
+            if(!mapOpen && GameManager.menuOpen.Equals("")) {
                 UpdateMapPlayerPos(gameObject.transform.position);
                 mapContainer.gameObject.SetActive(true);
                 mapOpen = true;
-            } else {
+                GameManager.menuOpen = "map";
+            } else if(GameManager.menuOpen.Equals("map")) {
                 mapContainer.gameObject.SetActive(false);
                 mapOpen = false;
+                GameManager.menuOpen = "";
             }
+            // Debug.Log("GameManager.menuOpen status in Map: "+ GameManager.menuOpen);
         }
         
     }
@@ -116,7 +123,6 @@ public class PlayerUIManager : MonoBehaviour
         switch(n)
         {
             case 1:
-                Debug.Log("Item name: "+ item.name);
                 itemSlotIcon1.sprite = item.itemSprite;
                 break;
             case 2:
@@ -136,15 +142,12 @@ public class PlayerUIManager : MonoBehaviour
     public void ActivateNewItemSlot() {
         if(!itemSlot2.activeSelf) {
             itemSlot2.SetActive(true);
-            Debug.Log("Activtaed slot 2");
             return;
         } else if(!itemSlot3.activeSelf) {
             itemSlot3.SetActive(true);
-            Debug.Log("Activtaed slot 3");
             return;
         } else if(!itemSlot4.activeSelf) {
             itemSlot4.SetActive(true);
-            Debug.Log("Activtaed slot 4");
             return;
         } else {
             return;
@@ -168,16 +171,17 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     public void UpdateMapPOI(Vector2 islandPos, Item islandItem) {
-        Debug.Log("Island pos: " + islandPos);
+        //Debug.Log("Island pos: " + islandPos);
         Image newIslandIcon = Instantiate(islandIcon, mapContainer);
         newIslandIcon.sprite = islandItem.itemSprite;
         newIslandIcon.gameObject.GetComponent<RectTransform>().anchoredPosition = islandPos;
         newIslandIcon.gameObject.SetActive(true);
     }
 
-    public void UpdateMapFaction(Vector2 factionPos, Faction fact) {
+    public void UpdateMapFaction(Vector2 factionPos, string factionName) {
         Image newFactionIcon = Instantiate(factionIcon, mapContainer);
-        newFactionIcon.sprite = Resources.Load<Sprite>("/Sprites/Sigils/" + fact.getName() + "Sigil");
+        Debug.Log("Map update, faction name: "+ factionName);
+        newFactionIcon.sprite = Resources.Load<Sprite>("Sprites/Sigils/" + factionName + "Sigil");
         newFactionIcon.gameObject.GetComponent<RectTransform>().anchoredPosition = factionPos;
         newFactionIcon.gameObject.SetActive(true);
     }

@@ -9,14 +9,38 @@ public class QuestMaker
 {
     public Quest GenQuest() {
         Item randItem = RandomItem();
-        Faction randFact = RandomFaction();
+        List<Faction> randFacts = RandomFactions();
 
-        string title = randFact.getName() + " requires " + randItem.name;
+        string title = "";
+
+        foreach (Faction f in randFacts) {
+            title += f.getName() +" or ";
+        }
+        title = title.Substring(0, title.Length - 3);
+        title += "requires " + randItem.name;
+
+        int shardReward = 0;
+        int factionReward = 0;
+
         // Random reward. Reward size decision could be improved
-        int shardReward = UnityEngine.Random.Range(50, 200);
-        int factionReward = 3;
+        switch(randFacts.Count) {
+            case 1:
+                shardReward = UnityEngine.Random.Range(50, 100);
+                factionReward =  2;
+                break;
+            case 2:
+                shardReward = UnityEngine.Random.Range(100, 150);
+                factionReward =  5;
+                break;
+            case 3:
+                shardReward = UnityEngine.Random.Range(150, 220);
+                factionReward =  8;
+                break;  
+        }
 
-        Goal goal = new DeliveryGoal(randFact, randItem);
+        Debug.Log("All quest deets = title: " + title + " shardreward: " + shardReward + " factionereard: "+ factionReward);
+
+        Goal goal = new DeliveryGoal(randFacts, randItem);
 
         return (new Quest(title, "Lorem Ipsum", shardReward, factionReward, goal));
 
@@ -31,22 +55,38 @@ public class QuestMaker
         return GameManager.gameManager.allItems[randItemNum];
     }
 
-    private Faction RandomFaction() {
-        Faction randFact;
-        int randFactNum = UnityEngine.Random.Range(0, 3);
-        // Debug.Log("Rnad num" + randFactNum);
+    private List<Faction> RandomFactions() {
+        List<Faction> facts = new List<Faction>();
+        int randFactNum = UnityEngine.Random.Range(0, 7);
+        Debug.Log("Rnad num" + randFactNum);
         switch(randFactNum) {
-            default:
             case 0:
-                randFact = Jura.Instance;
+                facts.Add(Jura.Instance);
                 break;
             case 1:
-                randFact = Nardvaal.Instance;
+                facts.Add(Nardvaal.Instance);
                 break;
             case 2:
-                randFact = Welkan.Instance;
+                facts.Add(Welkan.Instance);
+                break;
+            case 3:
+                facts.Add(Jura.Instance);
+                facts.Add(Nardvaal.Instance);
+                break;
+            case 4:
+                facts.Add(Nardvaal.Instance);
+                facts.Add(Welkan.Instance);
+                break;
+            case 5:
+                facts.Add(Jura.Instance);
+                facts.Add(Welkan.Instance);
+                break;
+            case 6:
+                facts.Add(Jura.Instance);
+                facts.Add(Nardvaal.Instance);
+                facts.Add(Welkan.Instance);
                 break;
         }
-        return randFact;
+        return facts;
     }
 }

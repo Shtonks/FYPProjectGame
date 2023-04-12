@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GenericShopInteraction : MonoBehaviour
 {
+    //public QuestTracker questTracker;
+
     public PlayerBehaviour pb;
 
     public int fuelPrice = 10;
@@ -36,7 +38,7 @@ public class GenericShopInteraction : MonoBehaviour
 
 
     public void BuyFuel() {
-        if(pb.shards >= fuelPrice){
+        if(pb.shards >= fuelPrice && pb.fuelLvl < pb.maxFuelLvl){
             pb.fuelLvl++;
             pb.shards -= fuelPrice;
         }
@@ -48,13 +50,21 @@ public class GenericShopInteraction : MonoBehaviour
         }
     }
 
+                // TO DELETE
+    //hjvkjk
+    // dfhvj;private void OnAnimatorIK(int layerIndex) {
+    //     ocvdjfopv
+    //     jvcfdsiovo
+    //     cjiosdpjfv
+    //     cojsdpf
+    // }
     public void FreeMoneyDebug() {
         pb.shards += 5000;
     }
 
     public void InstantQuestComp() {
         if(pb.quests != null){
-            pb.QuestComplete(pb.quests[0]);
+            //pb.QuestComplete(pb.quests[0]);
         }
     }
 

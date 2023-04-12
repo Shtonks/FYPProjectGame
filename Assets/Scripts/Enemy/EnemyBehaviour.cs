@@ -5,12 +5,13 @@ using UnityEngine;
 public class EnemyBehaviour : MonoBehaviour
 {
     public GameObject explosionObj;
+    public int dmgAmount;
     
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerBehaviour>().TakeDmg(1);
+            collision.gameObject.GetComponent<PlayerBehaviour>().TakeDmg(dmgAmount);
             Debug.Log("Player hit by enemy");
         }
 

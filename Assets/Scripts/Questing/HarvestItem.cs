@@ -19,7 +19,7 @@ public class HarvestItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player") {
-            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>().SetText("Press R to harvest " + islandItem.name);
+            harvestItemPrompt.GetComponentInChildren<TextMeshProUGUI>().SetText("Press E to harvest " + islandItem.name);
             harvestItemPrompt.SetActive(true);
             shopColl = true;
             if(!isDiscovered) {
@@ -37,7 +37,7 @@ public class HarvestItem : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R) && shopColl) {
+        if(Input.GetKeyDown(KeyCode.E) && shopColl) {
             pb.AddItem(islandItem);
             //Debug.Log("Item added!");
         }

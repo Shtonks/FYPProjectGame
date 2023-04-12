@@ -4,65 +4,76 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject quad;
+    public GameObject spawnCircle;
     public GameObject enemy;
-    public int enemiesInWorldCount = 10;
+    public GameObject repoShip;
+    public int numEnemiesToSpawn = 10;
     public int lowerEnemyGroupSize = 2;
     public int upperEnemyGroupSize = 6;
+    public int newEnemySpawnRetryLimit = 50;
+    public int clusterSpawnAttemptRetryLimit = 10;
+    private int effectedLayers;
+    private int totalEnemiesInWorld;
 
-    void Start()
+    public void SpawnEnemies()
     {
-        spawnEnemies();
-    }
+        Collider2D c = spawnCircle.GetComponent<CircleCollider2D>();
+        effectedLayers = LayerMask.GetMask("Land");
 
-    public void spawnEnemies()
-    {
-        Collider2D c = quad.GetComponent<CircleCollider2D>();
 
-        float screenX, screenY;
+        float colRadius = enemy.transform.localScale.x * enemy.GetComponent<CircleCollider2D>().radius * 1.5f;
         Vector2 pos;
 
+        int newSpawnAttempt = 0;
         int totalEnemiesInWorld = 0;
-        while (totalEnemiesInWorld < enemiesInWorldCount)
+        while (totalEnemiesInWorld < numEnemiesToSpawn)
         {
             int groupSize = Random.Range(lowerEnemyGroupSize, upperEnemyGroupSize);
 
-            screenX = Random.Range(c.bounds.min.x, c.bounds.max.x);
-            screenY = Random.Range(c.bounds.min.y, c.bounds.max.y);
-            pos = new Vector2(screenX, screenY);
-            
-            // Creates first enemy
-            Instantiate(enemy, pos, enemy.transform.rotation);
+            float randRadLength = Random.Range(50f, c.bounds.max.x);
+            pos = Vector2.zero + GetRandomDir() * randRadLength;
 
-            //Debug.Log("New initial enemy created");
-            //Debug.Log("Initial Pos: " + pos);
+            // Collision radius is calced: scaleOfObj * colliderRadius * offset
 
-            int i = 0;
-            int attempt = 0;
-            while(i < groupSize)
-            {
-                Vector2 newPos = GetRandomSpawnPos(pos);
-                float colRadius = enemy.GetComponent<CircleCollider2D>().radius * 1.5f;
-                //Debug.Log("New pos: " + newPos);           
-
-                // If 0, no collisions
-                int size = Physics2D.OverlapCircleAll(newPos, colRadius).Length;
-                
-                if(Physics2D.OverlapCircleAll(newPos, colRadius).Length == 0) {
-                    Instantiate(enemy, newPos, enemy.transform.rotation);
-                    pos = newPos;
-                    i++;
-                    //Debug.Log("Enemy: " + i);
-                }
-                attempt++;
-                if(attempt > 10){
-                    Debug.Log("Enemy spawn retry limit hit!!");
-                    i++;
-                }
+            if(Physics2D.OverlapCircleAll(pos, colRadius, effectedLayers).Length == 0) {
+                // Creates first enemy
+                Instantiate(enemy, pos, enemy.transform.rotation);
+                totalEnemiesInWorld++;
+                SpawnEnemyCluster(groupSize, pos);
+            } else {
+                newSpawnAttempt++;
             }
-            totalEnemiesInWorld += groupSize;
+            if(newSpawnAttempt > newEnemySpawnRetryLimit){
+                Debug.Log("Hit new Enemy limit");
+                return;
+            }
         }
-        // Debug.Log("total en:" + totalEnemiesInWorld);
+    }
+
+    public void SpawnEnemyCluster(int groupSize, Vector2 startPos) {
+        Vector2 pos = startPos;
+        int i = 0;
+        int clusterSpawnAttempt = 0;
+        while(i < groupSize)
+        {
+            Vector2 newPos = GetRandomSpawnPos(pos);
+            // Collision radius is calced: scaleOfObj * colliderRadius * offset
+            float colRadius = enemy.transform.localScale.x * enemy.GetComponent<CircleCollider2D>().radius * 1.5f;
+
+            // If 0, no collisions
+            // int size = Physics2D.OverlapCircleAll(newPos, colRadius).Length;
+            if(Physics2D.OverlapCircleAll(pos, colRadius, effectedLayers).Length == 0) {
+                Instantiate(enemy, newPos, enemy.transform.rotation);
+                pos = newPos;
+                i++;
+            } else {
+                clusterSpawnAttempt++;
+            }
+            if(clusterSpawnAttempt > clusterSpawnAttemptRetryLimit){
+                Debug.Log("Hit cluster spawn limit");
+                return;
+            }
+        }
     }
 
     // This determines how close enemies will spawn to each other
@@ -77,5 +88,11 @@ public class EnemySpawner : MonoBehaviour
     private static Vector2 GetRandomDir()
     {
         return new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized;
+    }
+
+    public void SpawnRepoShip(Vector2 playerPos) {
+        playerPos = new Vector2(playerPos.x, playerPos.y - 40);
+        Instantiate(repoShip, playerPos, repoShip.transform.rotation);
+        Debug.Log("Repo ship spawned");
     }
 }

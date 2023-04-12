@@ -17,6 +17,11 @@ public class EnemyAI : MonoBehaviour
     public float playerTargetRange = 10f;   // Enemy detection range
     public float playerLocTolerance = 2f;   // Determines size of dist between old player pos and current allowed before updating path to player
     public float speed = 200f;
+    public float minRoamDist = 10f;
+    public float maxRoamDist = 20f;
+
+    public float rotationSpeed;
+
     public Transform player;
     private Vector2 target;
 
@@ -72,10 +77,12 @@ public class EnemyAI : MonoBehaviour
         {
             default:
             case State.Roaming:
+                //Debug.Log("Inside roam state");
                 MoveTo();
                 // When we reach this dist, calc new roamPos
                 if (Vector2.Distance(transform.position, target) < roamingTargetDist)
                 {
+                    //Debug.Log("Target: " + target);
                     target = GetRoamingPos();
                     UpdatePathToRoam();
                 }
@@ -99,20 +106,25 @@ public class EnemyAI : MonoBehaviour
     {
         if (path == null)
         {
-            // Debug.Log("NULL PATH");
+            //Debug.Log("NULL PATH");
             return;
         }
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
-            // Debug.Log("NO MORE WAYPOINTS");
+            //Debug.Log("NO MORE WAYPOINTS");
+            target = GetRoamingPos();
+            UpdatePathToRoam();
             return;
         }
+
+        //Debug.Log("current weaypint" + currentWaypoint);
 
         Vector2 dir = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         Vector2 force = dir * speed * Time.deltaTime;
 
         rb.AddForce(force);
+        //RotateInDirectionOfInput(dir);
 
         float dist = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 
@@ -120,9 +132,16 @@ public class EnemyAI : MonoBehaviour
             currentWaypoint++;
     }
 
+    // private void RotateInDirectionOfInput(Vector2 movementInput) {
+    //     Quaternion targetRot = Quaternion.LookRotation(transform.forward, movementInput);
+    //     Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+
+    //     rb.MoveRotation(rotation);
+    // }
+
     private Vector3 GetRoamingPos()
     {
-        return startPos + GetRandomDir() * Random.Range(10f, 20f);
+        return startPos + GetRandomDir() * Random.Range(minRoamDist, maxRoamDist);
     }
 
     // Generate random normalized direction

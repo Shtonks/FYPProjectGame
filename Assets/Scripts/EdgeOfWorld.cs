@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class EdgeOfWorld : MonoBehaviour
 {
+    public PlayerBehaviour pb;
     public GameObject edgeOfWorldPrompt;
     private TextMeshProUGUI txt;
     private bool countdownTrig;
@@ -19,8 +20,10 @@ public class EdgeOfWorld : MonoBehaviour
     }
     
     private void OnTriggerExit2D(Collider2D other) {
-        edgeOfWorldPrompt.SetActive(true);
-        countdownTrig = true;
+        if(other.tag == "Player") {
+            edgeOfWorldPrompt.SetActive(true);
+            countdownTrig = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -36,7 +39,18 @@ public class EdgeOfWorld : MonoBehaviour
             if(countdown > 0){
                 countdown -= Time.deltaTime;
                 edgeOfWorldPrompt.GetComponentInChildren<TextMeshProUGUI>().SetText("Ship integrity will be compromised in " + countdown.ToString("0"));
+            } else {
+                InvokeRepeating("DmgPlayer", 0.1f, 0.5f);
+                countdownTrig = false;
             }
+        }
+    }
+
+    private void DmgPlayer() {
+        if (pb.GetHealth() - 2 > 0) {
+            pb.TakeDmg(2);
+        } else {
+            GameManager.gameManager.GameOverScreen("voidDeath", null);
         }
     }
 }

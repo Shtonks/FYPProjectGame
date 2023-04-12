@@ -12,11 +12,14 @@ public class PauseMenu : Menu
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape)) {
-            if(GameIsPaused) {
-                Resume();
-            } else {
+            if(!GameIsPaused && GameManager.menuOpen.Equals("")) {
                 Pause();
+                GameManager.menuOpen = "pauseMenu";
+            } else if(GameManager.menuOpen.Equals("pauseMenu")) {
+                Resume();
+                GameManager.menuOpen = "";
             }
+            Debug.Log("GameManager.menuOpen status in Pause menu: "+ GameManager.menuOpen);
         }
     }
 

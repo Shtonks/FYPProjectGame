@@ -22,6 +22,7 @@ public class Faction
             rep += n;
         } else {
             rep = 100;
+            GameManager.gameManager.GameOverScreen("factionRepFull", this);
         }
     }
 
@@ -30,6 +31,7 @@ public class Faction
             rep -= n;
         } else {
             rep = 0;
+            GameManager.gameManager.GameOverScreen("factionRepZero", this);
         }
     }
 

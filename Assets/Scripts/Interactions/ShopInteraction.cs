@@ -31,11 +31,9 @@ public class ShopInteraction : GenericShopInteraction
     public TMP_Text txtTitle;
     public TMP_Text txtShardReward;
 
-    public QuestTracker questTracker;
-
     private void Start() {
         contractAbandon.interactable = false;
-        currentVisibleQuest = 0;
+        currentVisibleQuest = -1;
     }
 
     private void OnDisable() {
@@ -44,17 +42,23 @@ public class ShopInteraction : GenericShopInteraction
     }
 
     public void CycleQuestWindow() {
+
+        currentVisibleQuest++;
+        if(currentVisibleQuest >= shopInfo.numOfQuests) {
+            currentVisibleQuest = 0;
+        }
+        Debug.Log("Current Vis Quest: " + currentVisibleQuest);
+
         questWindow.SetActive(true);
         txtTitle.text = shopInfo.quests[currentVisibleQuest].title.ToString();
         txtShardReward.text = shopInfo.quests[currentVisibleQuest].shardReward.ToString();
-        currentVisibleQuest++;
-        if(currentVisibleQuest > shopInfo.numOfQuests) currentVisibleQuest = 0;
     }
 
     public void AcceptQuest() {
         questWindow.SetActive(false);
         pb.quests.Add(shopInfo.quests[currentVisibleQuest]);
-        questTracker.ActivateTracker(shopInfo.quests[currentVisibleQuest]);
+        GameManager.gameManager.questTracker.ActivateTracker(shopInfo.quests[currentVisibleQuest]);
+        shopInfo.GenNewQuests();
         contractSelect.interactable = false;
         contractAbandon.interactable = true;
     }
@@ -63,7 +67,12 @@ public class ShopInteraction : GenericShopInteraction
         // Shards penalty of -50% what you would have got
         pb.shards -= shopInfo.quests[currentVisibleQuest].shardReward / 2;
         pb.quests.Remove(shopInfo.quests[currentVisibleQuest]);
-        questTracker.DeactivateTracker();
+        GameManager.gameManager.questTracker.DeactivateTracker();
+        contractSelect.interactable = true;
+        contractAbandon.interactable = false;
+    }
+
+    public void QuestComplete() {
         contractSelect.interactable = true;
         contractAbandon.interactable = false;
     }
